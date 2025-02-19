@@ -1,0 +1,102 @@
+\chapter{Setting Up Plug-ins}
+\label{user-plugins}
+
+The \FramaC platform has been designed to support third-party plug-ins. In the
+present chapter, we present how to configure, compile, install, run and update
+such extensions. This chapter does not deal with the development of new plug-ins (see the \textsf{Plug-in Development
+  Guide}~\cite{plugin-dev-guide}). Nor does it deal with usage
+of plug-ins, which is the purpose of individual plug-in documentation (see e.g.~\cite{value,wp,slicing}).
+
+\section{The Plug-in Taxonomy}\label{sec:plugin-taxonomy}
+
+There are two kinds of plug-ins: \emph{internal} and \emph{external} plug-ins.
+\index{Plug-in!Internal|bfit}\index{Plug-in!External|bfit}
+Internal plug-ins are those distributed within the \FramaC kernel while
+external plug-ins are those distributed independently of the \FramaC
+kernel. They only differ in the way they are installed:
+internal plug-ins are automatically installed with the \FramaC kernel,
+while external plug-ins must be installed separately.
+
+\section{Installing External Plug-ins}\label{sec:install-external}
+\index{Plug-in!External}
+
+To install an external plug-in, \FramaC itself must be properly installed
+first. In particular, \texttt{frama-c \optionuse{-}{print-share-path}}
+must return the share directory of \FramaC,
+while \texttt{frama-c \optionuse{-}{print-lib-path}}
+must return the directory where the \FramaC compiled library is installed.
+
+The standard way for installing an external plug-in from source is to run the
+sequence of commands \texttt{make \&\& make install}. Please refer to each
+plug-in's documentation for installation instructions.
+
+\section{Loading Plug-ins}\label{sec:use-plugins}
+
+At launch, \FramaC loads all plug-ins in the
+directories indicated by \texttt{frama-c \optionuse{-}{print-plugin-path}}.
+These directories contain \texttt{META} files which are used by Dune to
+automatically load these plug-ins.
+
+Like other OCaml libraries, \FramaC plug-ins can be located via the environment
+variable \texttt{OCAMLPATH}\index{OCAMLPATH}. It does not need to be set by
+default, but if you install \FramaC in a non-standard directory
+(e.g. \texttt{<PREFIX>}), you may need to add directory \texttt{<PREFIX>/lib}
+to \texttt{OCAMLPATH}.
+
+To prevent \FramaC from automatically loading any plug-ins, you can use option
+\optiondef{-}{no-autoload-plugins}. Then the plugin to load can be selected
+using \texttt{\optiondef{-}{load-plugin} <plugin-name>} (e.g. \texttt{aorai}).
+Since \FramaC plugins are also OCaml libraries it is possible to use
+\texttt{\optiondef{-}{load-library} <library-name>}
+(e.g. \texttt{frama-c-aorai}).
+Both options accept comma-separated lists of names.
+
+\begin{important}
+In general, plug-ins must be compiled with the
+very same \caml compiler than \FramaC was, and against a consistent \FramaC
+installation. Loading will fail and a warning will be emitted at launch if this
+is not the case.
+\end{important}
+
+\subsection{Loading Single OCaml Files as Plug-ins}
+
+\FramaC used to have an option \texttt{-load-script} that allowed loading a
+single OCaml file as a mini-plug-in. Since \FramaC 26 (Iron), the use of Dune
+requires a different approach: you need to create a directory containing the
+following files:
+\begin{itemize}
+\item a \texttt{dune-project} file;
+\item a \texttt{dune} file;
+\item the \texttt{script.ml} file that you want to load with \FramaC.
+\end{itemize}
+With these files, you will be able to run \texttt{dune build} to compile the
+script, and then \texttt{frama-c -load-module script.cmxs} to load it.
+
+Here is an example \texttt{dune-project} file:
+\begin{dunecode}
+(lang dune 3.13)
+\end{dunecode}
+
+Note: you can match the language version (here, 3.7) to the one of your
+installed \texttt{dune} package. Later versions often enable additional
+warnings.
+
+Here is an example \texttt{dune} file:
+\begin{dunecode}
+(executable
+  (name "script") ; must match the name of the .ml file
+  (modes plugin)
+  (libraries frama-c.init.cmdline frama-c.kernel) ; add more if needed
+  (flags -open Frama_c_kernel :standard)
+  (promote (until-clean)) ; keeps script.cmxs in the base directory
+)
+\end{dunecode}
+
+If your script depends on \FramaC plug-ins, you need to add them to
+\texttt{libraries}, e.g. \texttt{frama-c-<plugin>.core}.
+
+% Local Variables:
+% ispell-local-dictionary: "english"
+% TeX-master: "userman.tex"
+% compile-command: "make"
+% End:

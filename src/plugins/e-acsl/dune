@@ -1,0 +1,62 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                        ;;
+;;  This file is part of the Frama-C's E-ACSL plug-in.                    ;;
+;;                                                                        ;;
+;;  Copyright (C) 2012-2025                                               ;;
+;;    CEA (Commissariat à l'énergie atomique et aux énergies              ;;
+;;         alternatives)                                                  ;;
+;;                                                                        ;;
+;;  you can redistribute it and/or modify it under the terms of the GNU   ;;
+;;  Lesser General Public License as published by the Free Software       ;;
+;;  Foundation, version 2.1.                                              ;;
+;;                                                                        ;;
+;;  It is distributed in the hope that it will be useful,                 ;;
+;;  but WITHOUT ANY WARRANTY; without even the implied warranty of        ;;
+;;  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         ;;
+;;  GNU Lesser General Public License for more details.                   ;;
+;;                                                                        ;;
+;;  See the GNU Lesser General Public License version 2.1                 ;;
+;;  for more details (enclosed in the file licenses/LGPLv2.1).            ;;
+;;                                                                        ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; BUILD LIBDLMALLOC
+(data_only_dirs contrib)
+
+(rule
+ (deps (source_tree contrib))
+ (targets libeacsl-dlmalloc.a)
+ (action
+ (no-infer
+  (progn
+   (chdir contrib/libdlmalloc (run make))
+   (copy contrib/libdlmalloc/libeacsl-dlmalloc.a libeacsl-dlmalloc.a)))))
+
+
+; CONTRIB FILE
+(install
+ (package frama-c-e-acsl)
+ (section
+  (site
+   (frama-c-e-acsl contrib)))
+ (files
+  (contrib/libdlmalloc/dlmalloc.c as libdlmalloc/dlmalloc.c)))
+
+; LIB DLMALLOC
+(install
+ (package frama-c-e-acsl)
+ (section lib)
+ (files
+  (libeacsl-dlmalloc.a as libeacsl-dlmalloc.a)))
+
+; SCRIPT
+(install
+ (package frama-c-e-acsl)
+ (section bin)
+ (files
+  (scripts/e-acsl-gcc.sh as e-acsl-gcc.sh)))
+
+(install
+ (package frama-c-e-acsl)
+ (section (site (frama-c share)))
+ (source_trees (share/e-acsl as e-acsl)))

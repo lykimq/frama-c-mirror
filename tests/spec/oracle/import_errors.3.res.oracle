@@ -1,0 +1,7 @@
+[test-import] Linking.
+[kernel] Parsing import_errors.c (with preprocessing)
+[kernel:extension-unknown] import_errors.c:44: Warning: 
+  Ignoring unregistered module importer extension 'toto'
+[kernel] Deferred error: warning as error extension-unknown:
+  import_errors.c:44: Ignoring unregistered module importer extension 'toto'
+[kernel] Frama-C aborted: invalid user input.

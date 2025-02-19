@@ -1,0 +1,155 @@
+{
+  "name": "ivette",
+  "productName": "Ivette",
+  "version": "30.0.0",
+  "repository": "git@git.frama-c.com:frama-c/Ivette.git",
+  "author": "Loïc Correnson <loic.correnson@cea.fr>",
+  "license": "LGPL-2.1",
+  "description": "Frama-C GUI",
+  "homepage": "https://frama-c.com/html/ivette.html",
+  "main": "./out/main/index.js",
+  "scripts": {
+    "lint": "eslint --ext .ts,.tsx --format=compact ./src ./tests",
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "yarn run typecheck -- --watch",
+    "dist:mac": "yarn run electron-builder --mac --dir -c.compression=store -c.mac.identity=null",
+    "dist:win": "yarn run electron-builder --win --dir -c.compression=store",
+    "dist:linux": "yarn run electron-builder --linux --dir -c.compression=store",
+    "dist:all": "yarn run electron-builder -wlm --dir -c.compression=store -c.mac.identity=null",
+    "start": "electron-vite preview",
+    "dev": "electron-vite dev",
+    "build": "electron-vite build --logLevel warn",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "@codemirror/language": "6.10.0",
+    "@codemirror/search": "6.5.5",
+    "@codemirror/state": "6.4.0",
+    "@codemirror/view": "6.23.1",
+    "@electron-toolkit/preload": "^3.0.0",
+    "@electron-toolkit/utils": "^3.0.0",
+    "@fortawesome/fontawesome-free": "",
+    "@lezer/cpp": "^1",
+    "codemirror": "5.65.2",
+    "cytoscape": "",
+    "cytoscape-cola": "",
+    "cytoscape-cose-bilkent": "",
+    "cytoscape-cxtmenu": "",
+    "cytoscape-dagre": "",
+    "cytoscape-klay": "",
+    "cytoscape-panzoom": "",
+    "cytoscape-popper": "",
+    "d3-graphviz": "^5",
+    "d3-selection": "^3",
+    "diff": "^5",
+    "lodash": "^4",
+    "react": "^18",
+    "react-code-blocks": "0.1.6",
+    "react-cytoscapejs": "",
+    "react-dom": "^18",
+    "react-draggable": "^4.4.6",
+    "react-fast-compare": "^3.2.2",
+    "react-flame-graph": "^1.4.0",
+    "react-force-graph-2d": "^1.25.4",
+    "react-force-graph-3d": "^1.24.2",
+    "react-infinite-scroller": "^1.2.6",
+    "react-markdown": "9.0.1",
+    "react-pivottable": "^0.11.0",
+    "react-virtualized": "9.22.5",
+    "react-virtualized-auto-sizer": "^1.0.22",
+    "remark-custom-header-id": "^1.0.0",
+    "source-map-support": "^0.5.21",
+    "tippy.js": "6.3.7",
+    "typedoc": "^0.26.6"
+  },
+  "devDependencies": {
+    "@electron-toolkit/eslint-config-prettier": "^2.0.0",
+    "@electron-toolkit/eslint-config-ts": "^1.0.1",
+    "@electron-toolkit/tsconfig": "^1.0.1",
+    "@playwright/test": "^1.41.2",
+    "@types/cytoscape": "^3.19.16",
+    "@types/d3-graphviz": "^2.6.10",
+    "@types/d3-selection": "^3.0.10",
+    "@types/diff": "^5",
+    "@types/lodash": "^4",
+    "@types/node": "^18",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/react-infinite-scroller": "^1.2.5",
+    "@types/react-virtualized": "^9.21.8",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "electron": "^28",
+    "electron-builder": "^24",
+    "electron-builder-squirrel-windows": "^25.0.0-alpha.5",
+    "electron-devtools-installer": "^3.2.0",
+    "electron-vite": "^2",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-plugin-airbnb": "^0.0.1-security",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.2.4",
+    "typescript": "^5",
+    "vite": "^5.0.12",
+    "vite-plugin-commonjs-externals": "^0.1.4"
+  },
+  "build": {
+    "appId": "com.framac.ivette",
+    "compression": "store",
+    "copyright": "Copyright © 2007-2025 Frama-C. All Rights Reserved.",
+    "artifactName": "${productName}-${arch}.${ext}",
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "publish": [],
+      "icon": "static/icon.png",
+      "legalTrademarks": "LGPL-2.1"
+    },
+    "linux": {
+      "executableName": "ivette",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "publish": [],
+      "synopsis": "Frama-C GUI",
+      "category": "Profiling"
+    },
+    "mac": {
+      "icon": "static/icon.png",
+      "identity": null,
+      "mergeASARs": true,
+      "target": [
+        {
+          "target": "default",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "publish": [],
+      "type": "distribution",
+      "category": "public.app-category.developer-tools"
+    },
+    "dmg": {
+      "title": "Ivette ${version}",
+      "publish": []
+    }
+  }
+}

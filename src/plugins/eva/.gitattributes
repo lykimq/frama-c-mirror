@@ -1,0 +1,7 @@
+########################
+# HEADER_SPEC: .ignore #
+########################
+
+/gen_api/Eva.header header_spec=.ignore
+/Changelog_non_free header_spec=.ignore
+/legacy/TOREMOVE header_spec=.ignore

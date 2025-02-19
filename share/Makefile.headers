@@ -1,0 +1,184 @@
+##########################################################################
+#                                                                        #
+#  This file is part of Frama-C.                                         #
+#                                                                        #
+#  Copyright (C) 2007-2025                                               #
+#    CEA (Commissariat à l'énergie atomique et aux énergies              #
+#         alternatives)                                                  #
+#                                                                        #
+#  you can redistribute it and/or modify it under the terms of the GNU   #
+#  Lesser General Public License as published by the Free Software       #
+#  Foundation, version 2.1.                                              #
+#                                                                        #
+#  It is distributed in the hope that it will be useful,                 #
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of        #
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         #
+#  GNU Lesser General Public License for more details.                   #
+#                                                                        #
+#  See the GNU Lesser General Public License version 2.1                 #
+#  for more details (enclosed in the file licenses/LGPLv2.1).            #
+#                                                                        #
+##########################################################################
+
+#####################
+# HEADER MANAGEMENT #
+#####################
+
+##############
+# Parameters
+
+# Must be unset (for external plugins) and set (for FRAMA-C kernel)
+IN_FRAMAC?=
+
+HDRCK?=frama-c-hdrck
+
+# Can be set to no/yes
+# - yes: adds "-exit-on-warning" option to "frama-c-hdrck"
+HEADER_STRICT?=yes
+
+# Defines where to find the header directories
+HEADER_DIRS?=headers $(wildcard src/plugins/*/headers)
+
+# Can be set to unset/yes/no/<relative sub-directory>
+# - unset: look at $(HEADER_DIRS)
+# - yes:   look at $(HEADER_DIRS)/open-source
+# - no:    look at $(HEADER_DIRS)/closed-source
+# - <dir>: look at $(HEADER_DIRS)/<dir>
+HEADER_OPEN_SOURCE?=yes
+
+# Can be set to a directory
+# - <dir>: directory containing the files to manage
+HEADER_REPO?=
+
+# Can be set to a
+# - <file> containing files to check/update and their attributes, with 0
+#   separators (like 'git ls-files -z | git check-attr --stdin -z header_spec').
+HDRCK_FILES_INPUT?=
+
+# Can be set to a file
+# - <file>: file containing the list of the files to ignore any way
+HEADER_EXCEPTIONS?=
+
+# Extra parameters for "frama-c-hdrck"
+HDRCK_EXTRA?=
+
+# Can be set to a file
+# - <file>: file containing the header specification for distributed files
+HEADER_DISTRIB_FILE?=
+
+##########################################################################
+## Tools
+
+GIT  ?= git
+DUNE ?= dune
+
+##########################################################################
+## Command used to execute hdrck
+
+ifneq ($(IN_FRAMAC),yes)
+HDRCK.CMD:= $(HDRCK)
+else
+HDRCK.CMD:= $(DUNE) exec --no-print-directory --root $(FRAMAC_HDRCK_SRC) -- $(HDRCK)
+endif
+
+HDRCK.OPTS:= --stdin -z -spec-format 3-zeros
+
+##########################################################################
+## Updates HDRCK.OPTS variable
+
+ifneq ($(HEADER_DISTRIB_FILE),)
+# Adds the option "-distrib-file"
+HDRCK.OPTS+= -distrib-file $(HEADER_DISTRIB_FILE)
+endif
+
+ifneq ($(HEADER_EXCEPTIONS),)
+# Adds the option "-header-except-file"
+HDRCK.OPTS+= -header-except-file $(HEADER_EXCEPTIONS)
+endif
+
+ifneq ($(HEADER_REPO),)
+# Adds the option "-C"
+HDRCK.OPTS+= -C $(HEADER_REPO)
+endif
+
+ifeq ($(HEADER_STRICT),yes)
+# Adds the option "-exit-on-warning"
+HDRCK.OPTS+= -exit-on-warning
+endif
+
+##########################################################################
+## Identifies where are the headers and updates HDRCK.OPTS variable
+
+ifeq ($(HEADER_OPEN_SOURCE),yes)
+HDRCK.OPTS+= $(addprefix -header-dirs=,$(addsuffix /open-source,$(HEADER_DIRS)))
+else
+ifeq ($(HEADER_OPEN_SOURCE),no)
+HDRCK.OPTS+= $(addprefix -header-dirs=,$(addsuffix /closed-source,$(HEADER_DIRS)))
+else
+ifeq ($(HEADER_OPEN_SOURCE),)
+HDRCK.OPTS+= $(addprefix -header-dirs=,$(HEADER_DIRS))
+else
+HDRCK.OPTS+= $(addprefix -header-dirs=,$(addsuffix /$(HEADER_OPEN_SOURCE),$(HEADER_DIRS)))
+endif
+endif
+endif
+
+##########################################################################
+## HDRCK
+
+HDRCK.HAS_GIT:=$(shell git rev-parse --is-inside-work-tree 2> /dev/null)
+HDRCK.ENABLED=yes
+ifneq ($(HDRCK.HAS_GIT),true)
+ifeq ($(HDRCK_FILES_INPUT),)
+HDRCK.ENABLED=no
+endif
+endif
+
+ifeq ($(HDRCK_FILES_INPUT),)
+HDRCK.COLLECT=$(GIT) ls-files -z | $(GIT) check-attr --stdin -z header_spec
+else
+HDRCK.COLLECT=cat $(HDRCK_FILES_INPUT)
+endif
+
+ifeq ($(HDRCK.ENABLED),yes)
+
+.PHONY: check-headers
+check-headers:
+	$(HDRCK.COLLECT) | $(HDRCK.CMD) $(HDRCK.OPTS) $(HDRCK_EXTRA)
+
+.PHONY: headers
+headers:
+	$(HDRCK.COLLECT) | $(HDRCK.CMD) -update $(HDRCK.OPTS) $(HDRCK_EXTRA)
+
+else
+
+.PHONY: check-headers
+check-headers:
+	$(error "Cannot check-headers: not a Git repository, \
+	   			 you should specify HDRCK_FILES_INPUT")
+
+.PHONY: headers
+headers:
+	$(error "Cannot make headers: not a Git repository, \
+	   			 you should specify HDRCK_FILES_INPUT")
+
+endif
+
+#################################
+
+.PHONY: headers.info
+headers.info:
+	echo "HEADER_OPEN_SOURCE='$(HEADER_OPEN_SOURCE)'"
+	echo "HEADER_STRICT='$(HEADER_STRICT)'"
+	echo "HEADER_DIRS='$(HEADER_STRICT)'"
+	echo "HEADER_EXCEPTIONS='$(HEADER_EXCEPTIONS)'"
+	echo "HEADER_REPO='$(HEADER_REPO)'"
+	echo "HDRCK_FILES_INPUT='$(HDRCK_FILES_INPUT)'"
+	echo "HDRCK.HAS_GIT='$(HDRCK.HAS_GIT)'"
+	echo "HDRCK.CMD='$(HDRCK.CMD)'"
+	echo "HDRCK.OPTS='$(HDRCK.OPTS)'"
+
+###############################################################################
+# Local Variables:
+# compile-command: "make"
+# End:

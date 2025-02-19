@@ -1,0 +1,80 @@
+[kernel] Parsing strings_h.c (with preprocessing)
+[eva] Analyzing a complete application starting at main
+[eva] Computing initial state
+[eva] Initial state computed
+[eva:initial-state] Values of globals at initialization
+  nondet ∈ [--..--]
+[eva] computing for function strcasecmp <- main.
+  Called from strings_h.c:15.
+[eva] using specification for function strcasecmp
+[eva] strings_h.c:15: 
+  function strcasecmp: precondition 'valid_string_s1' got status valid.
+[eva] strings_h.c:15: 
+  function strcasecmp: precondition 'valid_string_s2' got status valid.
+[eva] Done for function strcasecmp
+[eva] computing for function strcasecmp <- main.
+  Called from strings_h.c:16.
+[eva] strings_h.c:16: 
+  function strcasecmp: precondition 'valid_string_s1' got status valid.
+[eva] strings_h.c:16: 
+  function strcasecmp: precondition 'valid_string_s2' got status valid.
+[eva] Done for function strcasecmp
+[eva] computing for function strcasecmp <- main.
+  Called from strings_h.c:17.
+[eva] strings_h.c:17: 
+  function strcasecmp: precondition 'valid_string_s1' got status valid.
+[eva] strings_h.c:17: 
+  function strcasecmp: precondition 'valid_string_s2' got status valid.
+[eva] Done for function strcasecmp
+[eva] computing for function strcasecmp <- main.
+  Called from strings_h.c:18.
+[eva] strings_h.c:18: 
+  function strcasecmp: precondition 'valid_string_s1' got status valid.
+[eva:alarm] strings_h.c:18: Warning: 
+  function strcasecmp: precondition 'valid_string_s2' got status invalid.
+[eva] Done for function strcasecmp
+[eva] computing for function strncasecmp <- main.
+  Called from strings_h.c:19.
+[eva] using specification for function strncasecmp
+[eva] strings_h.c:19: 
+  function strncasecmp: precondition 'valid_string_s1' got status valid.
+[eva] strings_h.c:19: 
+  function strncasecmp: precondition 'valid_string_s2' got status valid.
+[eva] Done for function strncasecmp
+[eva] computing for function strncasecmp <- main.
+  Called from strings_h.c:20.
+[eva] strings_h.c:20: 
+  function strncasecmp: precondition 'valid_string_s1' got status valid.
+[eva:alarm] strings_h.c:20: Warning: 
+  function strncasecmp: precondition 'valid_string_s2' got status invalid.
+[eva] Done for function strncasecmp
+[eva] computing for function strncasecmp <- main.
+  Called from strings_h.c:21.
+[eva] strings_h.c:21: 
+  function strncasecmp: precondition 'valid_string_s1' got status valid.
+[eva] strings_h.c:21: 
+  function strncasecmp: precondition 'valid_string_s2' got status valid.
+[eva] Done for function strncasecmp
+[eva] computing for function bzero <- main.
+  Called from strings_h.c:24.
+[eva] using specification for function bzero
+[eva] strings_h.c:24: 
+  function bzero: precondition 'valid_memory_area' got status valid.
+[eva] Done for function bzero
+[eva] strings_h.c:25: assertion got status valid.
+[eva] Recording results for main
+[eva] Done for function main
+[eva] ====== VALUES COMPUTED ======
+[eva:final-states] Values at end of function main:
+  s1 ∈ {{ "AbC" }}
+  s2 ∈ {{ "De" }}
+  s3 ∈ {{ "ABc" }}
+  s[0] ∈ {65}
+   [1] ∈ {66}
+   [2] ∈ {99}
+  r1 ∈ [--..--]
+  r2 ∈ [--..--]
+  r3 ∈ [--..--]
+  r4 ∈ [--..--]
+  r5 ∈ [--..--]
+  s4[0..9] ∈ {0}

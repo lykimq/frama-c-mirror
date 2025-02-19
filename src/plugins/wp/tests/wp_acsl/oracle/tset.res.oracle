@@ -1,0 +1,32 @@
+# frama-c -wp [...]
+[kernel] Parsing tset.i (no preprocessing)
+[wp] Running WP plugin...
+------------------------------------------------------------
+  Global
+------------------------------------------------------------
+
+Goal Lemma 'UNION_DESCR':
+Assume Lemmas: 'UNION_RANGE' 'UNION_LIFT' 'UNION_EQ'
+Prove: true.
+
+------------------------------------------------------------
+
+Goal Lemma 'UNION_EQ':
+Prove: (((x = 0) \/ (y = x)) /\ ((y = 0) \/ (y = x))) <-> (y = x).
+
+------------------------------------------------------------
+
+Goal Lemma 'UNION_LIFT':
+Assume Lemmas: 'UNION_EQ'
+Prove: true.
+
+------------------------------------------------------------
+
+Goal Lemma 'UNION_RANGE':
+Assume Lemmas: 'UNION_LIFT' 'UNION_EQ'
+Assume { Have: 0 <= k. Have: k <= n. }
+Prove: (((k < n) -> ((-1) <= k))) /\ (((0 < k) -> (k <= (1 + n)))) /\
+    (forall i : Z. ((0 <= i) -> ((i <= n) ->
+     ((i = k) \/ ((k < i) /\ (i <= n)) \/ ((0 <= i) /\ (i < k)))))).
+
+------------------------------------------------------------

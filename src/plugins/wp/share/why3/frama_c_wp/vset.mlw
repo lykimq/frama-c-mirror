@@ -1,0 +1,48 @@
+(**************************************************************************)
+(*                                                                        *)
+(*  This file is part of WP plug-in of Frama-C.                           *)
+(*                                                                        *)
+(*  Copyright (C) 2007-2025                                               *)
+(*    CEA (Commissariat a l'energie atomique et aux energies              *)
+(*         alternatives)                                                  *)
+(*                                                                        *)
+(*  you can redistribute it and/or modify it under the terms of the GNU   *)
+(*  Lesser General Public License as published by the Free Software       *)
+(*  Foundation, version 2.1.                                              *)
+(*                                                                        *)
+(*  It is distributed in the hope that it will be useful,                 *)
+(*  but WITHOUT ANY WARRANTY; without even the implied warranty of        *)
+(*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *)
+(*  GNU Lesser General Public License for more details.                   *)
+(*                                                                        *)
+(*  See the GNU Lesser General Public License version 2.1                 *)
+(*  for more details (enclosed in the file licenses/LGPLv2.1).            *)
+(*                                                                        *)
+(**************************************************************************)
+
+(* -------------------------------------------------------------------------- *)
+(* --- Additional Sets Symbols for WP                                     --- *)
+(* -------------------------------------------------------------------------- *)
+
+theory Vset
+
+  use int.Int
+  use map.Const
+  use export set.Set
+
+  function memb (x:'a) (s:set 'a) : bool = s x
+
+  let function range (inf sup:int) : set int (* [a..b] *) =
+    fun elt -> inf <= elt <= sup
+
+  function range_sup (sup:int) : set int (* [a..] *) =
+    fun elt -> elt <= sup
+
+  function range_inf (inf:int) : set int (* [..b] *) =
+    fun elt -> inf <= elt
+
+  function range_all : set int (* [..] *) = const true
+
+  (* -------------------------------------------------------------------------- *)
+
+end

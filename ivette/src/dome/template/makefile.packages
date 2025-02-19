@@ -1,0 +1,66 @@
+##########################################################################
+#                                                                        #
+#  This file is part of Frama-C.                                         #
+#                                                                        #
+#  Copyright (C) 2007-2025                                               #
+#    CEA (Commissariat à l'énergie atomique et aux énergies              #
+#         alternatives)                                                  #
+#                                                                        #
+#  you can redistribute it and/or modify it under the terms of the GNU   #
+#  Lesser General Public License as published by the Free Software       #
+#  Foundation, version 2.1.                                              #
+#                                                                        #
+#  It is distributed in the hope that it will be useful,                 #
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of        #
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         #
+#  GNU Lesser General Public License for more details.                   #
+#                                                                        #
+#  See the GNU Lesser General Public License version 2.1                 #
+#  for more details (enclosed in the file licenses/LGPLv2.1).            #
+#                                                                        #
+##########################################################################
+
+# --------------------------------------------------------------------------
+# ---  Packages Definitions for Dome environment                         ---
+# --------------------------------------------------------------------------
+
+DOME_DEV_PACKAGES= \
+	electron@^28 \
+	electron-builder@^24 \
+	electron-vite@^2 \
+	electron-devtools-installer \
+	@types/lodash@^4 \
+	@types/react@^18 \
+	@types/node@^18 \
+	@types/react-dom@^18 \
+	@types/react-virtualized@^9.21.8 \
+	@types/diff@^5 \
+	@types/d3-selection \
+	@types/d3-graphviz \
+	typescript@^5
+
+DOME_APP_PACKAGES= \
+	react@^18 \
+	react-dom@^18 \
+	source-map-support \
+	lodash@^4 \
+	react-virtualized@9.22.5 \
+	react-draggable \
+	react-fast-compare \
+	diff@^5 \
+	codemirror@5.65.2 \
+	@codemirror/language@6.10.0 \
+    @codemirror/search@6.5.5 \
+    @codemirror/state@6.4.0 \
+    @codemirror/view@6.23.1 \
+	@lezer/cpp@^1 \
+	react-virtualized-auto-sizer@^1.0.22 \
+	react-force-graph-2d@^1.25.4 \
+	react-force-graph-3d@^1.24.2 \
+	d3-selection@^3 \
+	d3-graphviz@^5 \
+	react-markdown@9.0.1 \
+	react-code-blocks@0.1.6 \
+	remark-custom-header-id@1.0.0
+
+# --------------------------------------------------------------------------
